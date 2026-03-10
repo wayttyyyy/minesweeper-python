@@ -6,12 +6,14 @@ class Board:
         self.rows = rows
         self.cols = cols
         self.mines = mines
-        self.flags_placed = 0 # Добавили счетчик флагов
+        self.flags_placed = 0 # Лічильник прапорців
+        # Ініціалізація сітки
         self.grid = [[Cell(r, c) for c in range(cols)] for r in range(rows)]
         self.game_over = False
         self.win = False
 
         self._place_mines()
+        self._calculate_adjacency()
 
     def _place_mines(self):
         mines_placed = 0
@@ -21,3 +23,19 @@ class Board:
             if not self.grid[r][c].is_mine:
                 self.grid[r][c].is_mine = True
                 mines_placed += 1
+
+    def _calculate_adjacency(self):
+        # Напрями для перевірки 8 сусідніх клітин
+        directions = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (1,-1), (1,0), (1,1)]
+        for r in range(self.rows):
+            for c in range(self.cols):
+                if self.grid[r][c].is_mine:
+                    continue
+                count = 0
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+                    # Перевірка меж масиву
+                    if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                        if self.grid[nr][nc].is_mine:
+                            count += 1
+                self.grid[r][c].adjacent_mines = count
