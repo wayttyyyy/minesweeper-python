@@ -49,3 +49,12 @@ class Board:
         if self.grid[r][c].is_mine:
             self.game_over = True
             return
+        
+        # Рекурсивне відкриття порожніх областей
+        if self.grid[r][c].adjacent_mines == 0:
+            directions = [(-1,-1), (-1,0), (-1,1), (0,-1), (0,1), (1,-1), (1,0), (1,1)]
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                # Перевірка, що сусідня клітина знаходиться всередині ігрового поля
+                if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                    self.reveal_cell(nr, nc)
