@@ -39,3 +39,13 @@ class Board:
                         if self.grid[nr][nc].is_mine:
                             count += 1
                 self.grid[r][c].adjacent_mines = count
+    
+    def reveal_cell(self, r, c):
+        if self.game_over or self.grid[r][c].is_revealed or self.grid[r][c].is_flagged:
+            return
+
+        self.grid[r][c].is_revealed = True
+
+        if self.grid[r][c].is_mine:
+            self.game_over = True
+            return
