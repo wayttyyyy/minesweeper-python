@@ -58,3 +58,13 @@ class Board:
                 # Перевірка, що сусідня клітина знаходиться всередині ігрового поля
                 if 0 <= nr < self.rows and 0 <= nc < self.cols:
                     self.reveal_cell(nr, nc)
+
+    def toggle_flag(self, r, c):
+        if not self.grid[r][c].is_revealed and not self.game_over:
+            # Змінюємо логіку: тепер ми стежимо за кількістю
+            if self.grid[r][c].is_flagged:
+                self.grid[r][c].is_flagged = False
+                self.flags_placed -= 1
+            else:
+                self.grid[r][c].is_flagged = True
+                self.flags_placed += 1
