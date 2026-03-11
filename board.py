@@ -59,6 +59,8 @@ class Board:
                 if 0 <= nr < self.rows and 0 <= nc < self.cols:
                     self.reveal_cell(nr, nc)
 
+        self.check_win()
+
     def toggle_flag(self, r, c):
         if not self.grid[r][c].is_revealed and not self.game_over:
             # Змінюємо логіку: тепер ми стежимо за кількістю
@@ -68,3 +70,12 @@ class Board:
             else:
                 self.grid[r][c].is_flagged = True
                 self.flags_placed += 1
+
+    def check_win(self):
+        for r in range(self.rows):
+            for c in range(self.cols):
+                cell = self.grid[r][c]
+                if not cell.is_mine and not cell.is_revealed:
+                    return
+        self.win = True
+        self.game_over = True
