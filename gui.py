@@ -44,5 +44,25 @@ class MinesweeperGUI:
             "Середньо": (100, 10, 100, 30, 16, 16, 40),
             "Складно": (210, 10, 100, 30, 20, 20, 80)
         }
+
+        def start_game(self, rows, cols, mines):
+            self.board = Board(rows, cols, mines)
+            self.difficulty_key = f"{rows}x{cols}"
+            self.timer_running = False
+            self.elapsed_time = 0
+        
+        # Налаштування розміру вікна
+            width = cols * CELL_SIZE
+            height = rows * CELL_SIZE + PANEL_HEIGHT
+        
+        # Робимо вікно трохи ширшим, щоб вліз весь текст
+            if width < 340: 
+                width = 340 
+            
+        # Вираховуємо відступ зліва, щоб поле завжди було по центру
+            self.offset_x = (width - (cols * CELL_SIZE)) // 2
+        
+            self.screen = pygame.display.set_mode((width, height))
+            pygame.display.set_caption("Minesweeper")
         
         self.start_game(10, 10, 10)
