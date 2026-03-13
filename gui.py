@@ -4,7 +4,7 @@ import json
 import os
 from board import Board
 
-# ������������ �������
+# Налаштування кольорів
 COLORS = {
     "bg": (192, 192, 192),
     "cell_closed": (150, 150, 150),
@@ -17,7 +17,7 @@ COLORS = {
     "btn": (200, 200, 200)
 }
 
-# ������� ��� ����
+# Кольори для цифр
 NUM_COLORS = {
     1: (0, 0, 255), 2: (0, 128, 0), 3: (255, 0, 0),
     4: (0, 0, 128), 5: (128, 0, 0), 6: (0, 128, 128),
@@ -38,31 +38,42 @@ class MinesweeperGUI:
         self.start_time = 0
         self.elapsed_time = 0
         
-        # ������ ��������� (x, y, width, height, rows, cols, mines)
+        # Кнопки складності (x, y, width, height, rows, cols, mines)
         self.diff_buttons = {
             "Легко": (10, 10, 80, 30, 10, 10, 10),
             "Середньо": (100, 10, 100, 30, 16, 16, 40),
             "Складно": (210, 10, 100, 30, 20, 20, 80)
         }
-
-        def start_game(self, rows, cols, mines):
-            self.board = Board(rows, cols, mines)
-            self.difficulty_key = f"{rows}x{cols}"
-            self.timer_running = False
-            self.elapsed_time = 0
-        
-        # ������������ ������ ����
-            width = cols * CELL_SIZE
-            height = rows * CELL_SIZE + PANEL_HEIGHT
-        
-        # ������ ���� ����� ������, ��� ��� ���� �����
-            if width < 340: 
-                width = 340 
-            
-        # ���������� ������ ����, ��� ���� ������ ���� �� ������
-            self.offset_x = (width - (cols * CELL_SIZE)) // 2
-        
-            self.screen = pygame.display.set_mode((width, height))
-            pygame.display.set_caption("Minesweeper")
         
         self.start_game(10, 10, 10)
+
+    def start_game(self, rows, cols, mines):
+        self.board = Board(rows, cols, mines)
+        self.difficulty_key = f"{rows}x{cols}"
+        self.timer_running = False
+        self.elapsed_time = 0
+    
+        # Налаштування розміру вікна
+        width = cols * CELL_SIZE
+        height = rows * CELL_SIZE + PANEL_HEIGHT
+    
+        # Робимо вікно трохи ширшим, щоб вліз весь текст
+        if width < 340: 
+            width = 340 
+        
+        # Вираховуємо відступ зліва, щоб поле завжди було по центру
+        self.offset_x = (width - (cols * CELL_SIZE)) // 2
+    
+        self.screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Minesweeper")
+
+    def draw_panel(self):
+        # Малюємо фон панелі
+        pygame.draw.rect(self.screen, COLORS["panel"], (0, 0, self.screen.get_width(), PANEL_HEIGHT))
+        
+        # Малюємо кнопки складності
+        for name, (x, y, w, h, r, c, m) in self.diff_buttons.items():
+            pygame.draw.rect(self.screen, COLORS["btn"], (x, y, w, h))
+            pygame.draw.rect(self.screen, COLORS["text"], (x, y, w, h), 2)
+            btn_text = self.font.render(name, True, COLORS["text"])
+            self.screen.blit(btn_text, (x + (w - btn_text.get_width()) // 2, y + (h - btn_text.get_height()) // 2))
