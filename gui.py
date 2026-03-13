@@ -88,6 +88,9 @@ class MinesweeperGUI:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                # Додаємо обробку кліку миші
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_click(event.pos, event.button)
             
             self.screen.fill(COLORS["bg"])
             self.draw_panel()
@@ -97,3 +100,13 @@ class MinesweeperGUI:
             clock.tick(30)
             
         pygame.quit()
+
+    def handle_click(self, pos, button):
+        x, y = pos
+        
+        # Натискання на панель кнопок
+        if y < PANEL_HEIGHT:
+            for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
+                if bx <= x <= bx + bw and by <= y <= by + bh:
+                    self.start_game(r, c, m)
+                    return
