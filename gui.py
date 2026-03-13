@@ -79,3 +79,36 @@ class MinesweeperGUI:
                     # Малюємо закриту клітинку
                     pygame.draw.rect(self.screen, COLORS["cell_closed"], (x, y, CELL_SIZE, CELL_SIZE))
                     pygame.draw.rect(self.screen, COLORS["line"], (x, y, CELL_SIZE, CELL_SIZE), 1)
+
+    def run(self):
+        running = True
+        clock = pygame.time.Clock()
+        
+        while running:
+            # 1. Заливка фону (на самому початку циклу)
+            self.screen.fill(COLORS["bg"])
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_click(event.pos, event.button)
+            
+            self.draw_panel()
+            self.draw_board()
+            
+            # 2. Оновлення екрану (в самому кінці циклу)
+            pygame.display.flip()
+            clock.tick(30)
+            
+        pygame.quit()
+
+    def handle_click(self, pos, button):
+        x, y = pos
+        
+        # Натискання на панель кнопок
+        if y < PANEL_HEIGHT:
+            for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
+                if bx <= x <= bx + bw and by <= y <= by + bh:
+                    self.start_game(r, c, m)
+                    return
