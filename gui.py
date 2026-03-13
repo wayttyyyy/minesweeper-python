@@ -85,17 +85,19 @@ class MinesweeperGUI:
         clock = pygame.time.Clock()
         
         while running:
+            # 1. Заливка фону (на самому початку циклу)
+            self.screen.fill(COLORS["bg"])
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                # Додаємо обробку кліку миші
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_click(event.pos, event.button)
             
-            self.screen.fill(COLORS["bg"])
             self.draw_panel()
             self.draw_board()
             
+            # 2. Оновлення екрану (в самому кінці циклу)
             pygame.display.flip()
             clock.tick(30)
             
