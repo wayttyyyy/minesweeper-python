@@ -67,13 +67,15 @@ class MinesweeperGUI:
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Minesweeper")
 
-    def draw_panel(self):
-        # Малюємо фон панелі
-        pygame.draw.rect(self.screen, COLORS["panel"], (0, 0, self.screen.get_width(), PANEL_HEIGHT))
-        
-        # Малюємо кнопки складності
-        for name, (x, y, w, h, r, c, m) in self.diff_buttons.items():
-            pygame.draw.rect(self.screen, COLORS["btn"], (x, y, w, h))
-            pygame.draw.rect(self.screen, COLORS["text"], (x, y, w, h), 2)
-            btn_text = self.font.render(name, True, COLORS["text"])
-            self.screen.blit(btn_text, (x + (w - btn_text.get_width()) // 2, y + (h - btn_text.get_height()) // 2))
+    def draw_board(self):
+        for r in range(self.board.rows):
+            for c in range(self.board.cols):
+                cell = self.board.grid[r][c]
+                # Розрахунок координат з урахуванням зміщення та висоти панелі
+                x = self.offset_x + c * CELL_SIZE
+                y = PANEL_HEIGHT + r * CELL_SIZE
+                
+                if not cell.is_revealed:
+                    # Малюємо закриту клітинку
+                    pygame.draw.rect(self.screen, COLORS["cell_closed"], (x, y, CELL_SIZE, CELL_SIZE))
+                    pygame.draw.rect(self.screen, COLORS["line"], (x, y, CELL_SIZE, CELL_SIZE), 1)
