@@ -162,6 +162,12 @@ class MinesweeperGUI:
                             self.show_all_mines()
                     elif button == 3: 
                         self.board.toggle_flag(row, col)
+    def show_all_mines(self):
+        for r in range(self.board.rows):
+            for c in range(self.board.cols):
+                if self.board.grid[r][c].is_mine:
+                    self.board.grid[r][c].is_revealed = True
+    
     def update_mines_label(self):
         remaining = self.board.mines - self.board.flags_placed
         self.mines_label.config(text=f"Мін: {remaining}")
