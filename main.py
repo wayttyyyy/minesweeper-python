@@ -1,8 +1,13 @@
+import tkinter as tk
 from gui import MinesweeperGUI
 
 def main():
-    app = MinesweeperGUI()
-    app.run()
+    root = tk.Tk()
+    root.resizable(False, False)
+    
+    app = MinesweeperGUI(root)
+    
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
