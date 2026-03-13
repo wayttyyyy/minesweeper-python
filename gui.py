@@ -243,7 +243,25 @@ class MinesweeperGUI:
             
             if self.timer_running:
                 self.elapsed_time = int(time.time() - self.start_time)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    self.handle_click(event.pos, event.button)
 
+            self.draw_panel()
+            self.draw_board()
+            
+            # Якщо гра закінчена, виводимо текст поверх екрану
+            if self.board.game_over:
+                msg = "ПЕРЕМОГА!" if self.board.win else "ПОРАЗКА!"
+                color = (0, 255, 0) if self.board.win else (255, 0, 0)
+                txt = self.big_font.render(msg, True, color)
+                # Розміщуємо по центру
+                self.screen.blit(txt, (self.screen.get_width()//2 - txt.get_width()//2, self.screen.get_height()//2 - txt.get_height()//2))
+
+            pygame.display.flip()
+            clock.tick(30)
     def update_board(self):
         colors = {1: "blue", 2: "green", 3: "red", 4: "purple", 5: "maroon", 6: "turquoise", 7: "black", 8: "gray"}
         for r in range(self.board.rows):
