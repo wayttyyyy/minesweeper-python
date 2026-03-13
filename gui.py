@@ -79,3 +79,21 @@ class MinesweeperGUI:
                     # Малюємо закриту клітинку
                     pygame.draw.rect(self.screen, COLORS["cell_closed"], (x, y, CELL_SIZE, CELL_SIZE))
                     pygame.draw.rect(self.screen, COLORS["line"], (x, y, CELL_SIZE, CELL_SIZE), 1)
+
+    def run(self):
+        running = True
+        clock = pygame.time.Clock()
+        
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+            
+            self.screen.fill(COLORS["bg"])
+            self.draw_panel()
+            self.draw_board()
+            
+            pygame.display.flip()
+            clock.tick(30)
+            
+        pygame.quit()
