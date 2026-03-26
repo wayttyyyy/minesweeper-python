@@ -79,6 +79,14 @@ class MinesweeperGUI:
                     # Малюємо закриту клітинку
                     pygame.draw.rect(self.screen, COLORS["cell_closed"], (x, y, CELL_SIZE, CELL_SIZE))
                     pygame.draw.rect(self.screen, COLORS["line"], (x, y, CELL_SIZE, CELL_SIZE), 1)
+                else:
+                    pygame.draw.rect(self.screen, COLORS["cell_open"], rect)
+                    pygame.draw.rect(self.screen, COLORS["line"], rect, 1)
+                    if cell.is_mine:
+                        pygame.draw.circle(self.screen, COLORS["mine"], (x + CELL_SIZE//2, y + CELL_SIZE//2), CELL_SIZE//3)
+                    elif cell.adjacent_mines > 0:
+                        txt = self.font.render(str(cell.adjacent_mines), True, NUM_COLORS.get(cell.adjacent_mines, COLORS["text"]))
+                        self.screen.blit(txt, (x + 10, y + 5))
 
     def run(self):
         running = True
@@ -114,6 +122,34 @@ class MinesweeperGUI:
                 if bx <= x <= bx + bw and by <= y <= by + bh:
                     self.start_game(r, c, m)
                     return
+        if self.board.game_over:
+            return
+
+        # Перевіряємо, чи клік був не по порожній зоні збоку від поля
+        if x < self.offset_x or x >= self.offset_x + self.board.cols * CELL_SIZE:
+            return
+
+        # Вираховуємо колонку з урахуванням відступу
+        col = (x - self.offset_x) // CELL_SIZE
+        row = (y - PANEL_HEIGHT) // CELL_SIZE
+
+        if 0 <= row < self.board.rows and 0 <= col < self.board.cols:
+            if button == 1: 
+                if not self.board.grid[row][col].is_flagged:
+                    if not self.timer_running:
+                        self.timer_running = True
+                        self.start_time = time.time()
+                    
+                    self.board.reveal_cell(row, col)
+                if self.board.game_over:
+                        self.timer_running = False
+                        if self.board.win:
+                            self.check_best_time()
+                        else:
+                            self.show_all_mines()
+            
+            elif button == 3: 
+                self.board.toggle_flag(row, col)            
     def load_best_times(self):
         if os.path.exists("best_times.json"):
             with open("best_times.json", "r") as f:
