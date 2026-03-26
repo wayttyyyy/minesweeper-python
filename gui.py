@@ -106,7 +106,12 @@ class MinesweeperGUI:
             
             self.draw_panel()
             self.draw_board()
-            
+            if self.board.game_over:
+                msg = "ПЕРЕМОГА!" if self.board.win else "ПОРАЗКА!"
+                color = (0, 255, 0) if self.board.win else (255, 0, 0)
+                txt = self.big_font.render(msg, True, color)
+                # Розміщуємо по центру
+                self.screen.blit(txt, (self.screen.get_width()//2 - txt.get_width()//2, self.screen.get_height()//2 - txt.get_height()//2))
             # 2. Оновлення екрану (в самому кінці циклу)
             pygame.display.flip()
             clock.tick(30)
