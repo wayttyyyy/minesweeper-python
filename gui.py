@@ -157,7 +157,7 @@ class MinesweeperGUI:
                         self.start_time = time.time()
                     
                     self.board.reveal_cell(row, col)
-                    
+
                     if self.board.game_over:
                             self.timer_running = False
                             if self.board.win:
@@ -172,11 +172,12 @@ class MinesweeperGUI:
         if os.path.exists("best_times.json"):
             with open("best_times.json", "r") as f:
                 return json.load(f)
-        else:
-            return {"10x10": None, "16x16": None, "20x20": None}
+        return {"10x10": float('inf'), "16x16": float('inf'), "20x20": float('inf')}
+    
     def save_best_times(self): 
         with open("best_times.json", "w") as f:
             json.dump(self.best_times, f)
+
     def draw_panel(self):
         # Малюємо панель
         pygame.draw.rect(self.screen, COLORS["panel"], (0, 0, self.screen.get_width(), PANEL_HEIGHT))
@@ -184,9 +185,25 @@ class MinesweeperGUI:
         # Малюємо кнопки складності
         for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
             pygame.draw.rect(self.screen, COLORS["btn"], (bx, by, bw, bh))
+            pygame.draw.rect(self.screen, COLORS["text"], (bx, by, bw, bh), 2)
             text = self.font.render(name, True, COLORS["text"])
-            text_rect = text.get_rect(center=(bx + bw // 2, by + bh // 2))
-            self.screen.blit(text, text_rect)
+            self.screen.blit(text, (bx + 5, by + 5))
+
+        # Статистика
+        mines_left = self.board.mines - self.board.flags_placed
+        time_display = self.elapsed_time if self.timer_running or self.board.game_over else 0
+        bt = self.best_times.get(self.difficulty_key, float('inf'))
+        best_str = f"Рекорд: {bt}с" if bt != float('inf') else "Рекорд: -"
+        
+        mines_lbl = self.font.render(f"Мін: {mines_left}", True, (255, 255, 255))
+        time_lbl = self.font.render(f"Час: {time_display}с", True, (255, 255, 255))
+        best_lbl = self.font.render(best_str, True, (255, 255, 255))
+        
+        # Рівномірно розподіляємо текст по ширині панелі
+        self.screen.blit(mines_lbl, (15, 50))
+        self.screen.blit(time_lbl, (self.screen.get_width() // 2 - time_lbl.get_width() // 2, 50))
+        self.screen.blit(best_lbl, (self.screen.get_width() - best_lbl.get_width() - 15, 50))
+
     def show_all_mines(self):
         for r in range(self.board.rows):
             for c in range(self.board.cols):
