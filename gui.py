@@ -87,12 +87,14 @@ class MinesweeperGUI:
         while running:
             # 1. Заливка фону (на самому початку циклу)
             self.screen.fill(COLORS["bg"])
-            
+            if self.timer_running:
+                self.elapsed_time = int(time.time() - self.start_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_click(event.pos, event.button)
+
             
             self.draw_panel()
             self.draw_board()
