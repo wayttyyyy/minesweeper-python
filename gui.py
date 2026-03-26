@@ -121,3 +121,14 @@ class MinesweeperGUI:
     def save_best_times(self): 
         with open("best_times.json", "w") as f:
             json.dump(self.best_times, f)
+    def draw_panel(self):
+        # Малюємо панель
+        pygame.draw.rect(self.screen, COLORS["panel"], (0, 0, self.screen.get_width(), PANEL_HEIGHT))
+        
+        # Малюємо кнопки складності
+        for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
+            pygame.draw.rect(self.screen, COLORS["btn"], (bx, by, bw, bh))
+            text = self.font.render(name, True, COLORS["text"])
+            text_rect = text.get_rect(center=(bx + bw // 2, by + bh // 2))
+            self.screen.blit(text, text_rect)
+        
