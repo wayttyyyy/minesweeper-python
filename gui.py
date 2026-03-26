@@ -169,4 +169,9 @@ class MinesweeperGUI:
             text = self.font.render(name, True, COLORS["text"])
             text_rect = text.get_rect(center=(bx + bw // 2, by + bh // 2))
             self.screen.blit(text, text_rect)
+    def show_all_mines(self):
+        for r in range(self.board.rows):
+            for c in range(self.board.cols):
+                if self.board.grid[r][c].is_mine:
+                    self.board.grid[r][c].is_revealed = True
         
