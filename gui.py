@@ -70,15 +70,20 @@ class MinesweeperGUI:
     def draw_board(self):
         for r in range(self.board.rows):
             for c in range(self.board.cols):
-                cell = self.board.grid[r][c]
                 # Розрахунок координат з урахуванням зміщення та висоти панелі
                 x = self.offset_x + c * CELL_SIZE
                 y = PANEL_HEIGHT + r * CELL_SIZE
+                cell = self.board.grid[r][c]
+
+                rect = (x, y, CELL_SIZE, CELL_SIZE)
                 
                 if not cell.is_revealed:
                     # Малюємо закриту клітинку
                     pygame.draw.rect(self.screen, COLORS["cell_closed"], (x, y, CELL_SIZE, CELL_SIZE))
                     pygame.draw.rect(self.screen, COLORS["line"], (x, y, CELL_SIZE, CELL_SIZE), 1)
+                    if cell.is_flagged:
+                        pygame.draw.polygon(self.screen, COLORS["flag"], [(x+10, y+20), (x+10, y+10), (x+20, y+15)])
+                        pygame.draw.line(self.screen, COLORS["text"], (x+10, y+25), (x+10, y+10), 2)
                 else:
                     pygame.draw.rect(self.screen, COLORS["cell_open"], rect)
                     pygame.draw.rect(self.screen, COLORS["line"], rect, 1)
