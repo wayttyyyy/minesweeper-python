@@ -106,7 +106,12 @@ class MinesweeperGUI:
             
             self.draw_panel()
             self.draw_board()
-            
+            if self.board.game_over:
+                msg = "ПЕРЕМОГА!" if self.board.win else "ПОРАЗКА!"
+                color = (0, 255, 0) if self.board.win else (255, 0, 0)
+                txt = self.big_font.render(msg, True, color)
+                # Розміщуємо по центру
+                self.screen.blit(txt, (self.screen.get_width()//2 - txt.get_width()//2, self.screen.get_height()//2 - txt.get_height()//2))
             # 2. Оновлення екрану (в самому кінці циклу)
             pygame.display.flip()
             clock.tick(30)
@@ -169,4 +174,13 @@ class MinesweeperGUI:
             text = self.font.render(name, True, COLORS["text"])
             text_rect = text.get_rect(center=(bx + bw // 2, by + bh // 2))
             self.screen.blit(text, text_rect)
-        
+    def show_all_mines(self):
+        for r in range(self.board.rows):
+            for c in range(self.board.cols):
+                if self.board.grid[r][c].is_mine:
+                    self.board.grid[r][c].is_revealed = True
+    def check_best_time(self):
+        current_best = self.best_times.get(self.difficulty_key, float('inf'))
+        if self.elapsed_time < current_best:
+            self.best_times[self.difficulty_key] = self.elapsed_time
+            self.save_best_times()
