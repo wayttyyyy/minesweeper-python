@@ -174,4 +174,8 @@ class MinesweeperGUI:
             for c in range(self.board.cols):
                 if self.board.grid[r][c].is_mine:
                     self.board.grid[r][c].is_revealed = True
-        
+    def check_best_time(self):
+        current_best = self.best_times.get(self.difficulty_key, float('inf'))
+        if self.elapsed_time < current_best:
+            self.best_times[self.difficulty_key] = self.elapsed_time
+            self.save_best_times()
