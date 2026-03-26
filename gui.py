@@ -114,6 +114,26 @@ class MinesweeperGUI:
                 if bx <= x <= bx + bw and by <= y <= by + bh:
                     self.start_game(r, c, m)
                     return
+        if self.board.game_over:
+            return
+
+        # Перевіряємо, чи клік був не по порожній зоні збоку від поля
+        if x < self.offset_x or x >= self.offset_x + self.board.cols * CELL_SIZE:
+            return
+
+        # Вираховуємо колонку з урахуванням відступу
+        col = (x - self.offset_x) // CELL_SIZE
+        row = (y - PANEL_HEIGHT) // CELL_SIZE
+
+        if 0 <= row < self.board.rows and 0 <= col < self.board.cols:
+            if button == 1: 
+                if not self.board.grid[row][col].is_flagged:
+                    if not self.timer_running:
+                        self.timer_running = True
+                        self.start_time = time.time()
+                    
+                    self.board.reveal_cell(row, col)
+                            
     def load_best_times(self):
         if os.path.exists("best_times.json"):
             with open("best_times.json", "r") as f:
