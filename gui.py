@@ -100,8 +100,10 @@ class MinesweeperGUI:
         while running:
             # 1. Заливка фону (на самому початку циклу)
             self.screen.fill(COLORS["bg"])
+
             if self.timer_running:
                 self.elapsed_time = int(time.time() - self.start_time)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -111,12 +113,14 @@ class MinesweeperGUI:
             
             self.draw_panel()
             self.draw_board()
+
             if self.board.game_over:
                 msg = "ПЕРЕМОГА!" if self.board.win else "ПОРАЗКА!"
                 color = (0, 255, 0) if self.board.win else (255, 0, 0)
                 txt = self.big_font.render(msg, True, color)
                 # Розміщуємо по центру
                 self.screen.blit(txt, (self.screen.get_width()//2 - txt.get_width()//2, self.screen.get_height()//2 - txt.get_height()//2))
+
             # 2. Оновлення екрану (в самому кінці циклу)
             pygame.display.flip()
             clock.tick(30)
@@ -128,10 +132,12 @@ class MinesweeperGUI:
         
         # Натискання на панель кнопок
         if y < PANEL_HEIGHT:
-            for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
-                if bx <= x <= bx + bw and by <= y <= by + bh:
-                    self.start_game(r, c, m)
-                    return
+            if button == 1:
+                for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
+                    if bx <= x <= bx + bw and by <= y <= by + bh:
+                        self.start_game(r, c, m)
+            return
+        
         if self.board.game_over:
             return
 
@@ -151,15 +157,17 @@ class MinesweeperGUI:
                         self.start_time = time.time()
                     
                     self.board.reveal_cell(row, col)
-                if self.board.game_over:
-                        self.timer_running = False
-                        if self.board.win:
-                            self.check_best_time()
-                        else:
-                            self.show_all_mines()
+                    
+                    if self.board.game_over:
+                            self.timer_running = False
+                            if self.board.win:
+                                self.check_best_time()
+                            else:
+                                self.show_all_mines()
             
             elif button == 3: 
-                self.board.toggle_flag(row, col)            
+                self.board.toggle_flag(row, col)
+
     def load_best_times(self):
         if os.path.exists("best_times.json"):
             with open("best_times.json", "r") as f:
