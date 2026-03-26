@@ -79,6 +79,14 @@ class MinesweeperGUI:
                     # Малюємо закриту клітинку
                     pygame.draw.rect(self.screen, COLORS["cell_closed"], (x, y, CELL_SIZE, CELL_SIZE))
                     pygame.draw.rect(self.screen, COLORS["line"], (x, y, CELL_SIZE, CELL_SIZE), 1)
+                else:
+                    pygame.draw.rect(self.screen, COLORS["cell_open"], rect)
+                    pygame.draw.rect(self.screen, COLORS["line"], rect, 1)
+                    if cell.is_mine:
+                        pygame.draw.circle(self.screen, COLORS["mine"], (x + CELL_SIZE//2, y + CELL_SIZE//2), CELL_SIZE//3)
+                    elif cell.adjacent_mines > 0:
+                        txt = self.font.render(str(cell.adjacent_mines), True, NUM_COLORS.get(cell.adjacent_mines, COLORS["text"]))
+                        self.screen.blit(txt, (x + 10, y + 5))
 
     def run(self):
         running = True
