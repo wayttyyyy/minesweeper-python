@@ -133,7 +133,15 @@ class MinesweeperGUI:
                         self.start_time = time.time()
                     
                     self.board.reveal_cell(row, col)
-                            
+                if self.board.game_over:
+                        self.timer_running = False
+                        if self.board.win:
+                            self.check_best_time()
+                        else:
+                            self.show_all_mines()
+            
+            elif button == 3: 
+                self.board.toggle_flag(row, col)            
     def load_best_times(self):
         if os.path.exists("best_times.json"):
             with open("best_times.json", "r") as f:
