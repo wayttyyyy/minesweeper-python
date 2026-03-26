@@ -112,3 +112,12 @@ class MinesweeperGUI:
                 if bx <= x <= bx + bw and by <= y <= by + bh:
                     self.start_game(r, c, m)
                     return
+    def load_best_times(self):
+        if os.path.exists("best_times.json"):
+            with open("best_times.json", "r") as f:
+                return json.load(f)
+        else:
+            return {"10x10": None, "16x16": None, "20x20": None}
+    def save_best_times(self): 
+        with open("best_times.json", "w") as f:
+            json.dump(self.best_times, f)
