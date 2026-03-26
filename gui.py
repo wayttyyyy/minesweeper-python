@@ -87,12 +87,14 @@ class MinesweeperGUI:
         while running:
             # 1. Заливка фону (на самому початку циклу)
             self.screen.fill(COLORS["bg"])
-            
+            if self.timer_running:
+                self.elapsed_time = int(time.time() - self.start_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.handle_click(event.pos, event.button)
+
             
             self.draw_panel()
             self.draw_board()
@@ -112,3 +114,23 @@ class MinesweeperGUI:
                 if bx <= x <= bx + bw and by <= y <= by + bh:
                     self.start_game(r, c, m)
                     return
+    def load_best_times(self):
+        if os.path.exists("best_times.json"):
+            with open("best_times.json", "r") as f:
+                return json.load(f)
+        else:
+            return {"10x10": None, "16x16": None, "20x20": None}
+    def save_best_times(self): 
+        with open("best_times.json", "w") as f:
+            json.dump(self.best_times, f)
+    def draw_panel(self):
+        # Малюємо панель
+        pygame.draw.rect(self.screen, COLORS["panel"], (0, 0, self.screen.get_width(), PANEL_HEIGHT))
+        
+        # Малюємо кнопки складності
+        for name, (bx, by, bw, bh, r, c, m) in self.diff_buttons.items():
+            pygame.draw.rect(self.screen, COLORS["btn"], (bx, by, bw, bh))
+            text = self.font.render(name, True, COLORS["text"])
+            text_rect = text.get_rect(center=(bx + bw // 2, by + bh // 2))
+            self.screen.blit(text, text_rect)
+        
