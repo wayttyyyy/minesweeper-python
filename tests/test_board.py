@@ -4,6 +4,10 @@ from board import Board
 
 @pytest.fixture
 def empty_board():
+    """
+    Фікстура, яка створює невелику дошку (3x3) без мін.
+    Це дозволяє нам вручну розставляти міни там, де нам потрібно для тестів.
+    """
     return Board(rows=3, cols=3, mines=0)
 
 
@@ -11,6 +15,7 @@ def empty_board():
 
 # Тест 1: Перевірка ініціалізації дошки (генерація мін)
 def test_board_initialization():
+    """Перевіряє, чи створюється поле правильного розміру і з правильною кількістю мін."""
     board = Board(rows=5, cols=5, mines=5)
 
     assert board.rows == 5
@@ -25,6 +30,7 @@ def test_board_initialization():
 
 # Тест 2: Перевірка логіки прапорців
 def test_toggle_flag(empty_board):
+    """Перевіряє, чи правильно ставиться/знімається прапорець та оновлюється лічильник."""
     board = empty_board
     assert board.flags_placed == 0
 
@@ -48,6 +54,10 @@ def test_toggle_flag(empty_board):
       (1, 2), (2, 0), (2, 1), (2, 2)], 1, 1, 8)  # Міни навколо центру
 ])
 def test_calculate_adjacency(empty_board, mine_coords, check_r, check_c, expected_count):
+    """
+    Параметризований тест для перевірки методу _calculate_adjacency.
+    Перевіряє різні комбінації розташування мін навколо певної клітинки.
+    """
     board = empty_board
 
     # Вручну розставляємо міни за координатами з параметрів
